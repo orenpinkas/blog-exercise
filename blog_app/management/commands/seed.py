@@ -43,7 +43,6 @@ def generate_post(all_authors, all_categories):
     content = fake.text(max_nb_chars=1000)  # Generates random text up to 1000 characters
     author = random.choice(all_authors)
     categories = random.choices(all_categories, k=random.randint(1, 3))
-    print(categories)
     return title, content, author, categories
 
 
