@@ -1,35 +1,45 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 from blog_app.models import Post
 from .serializers import PostSerializer
 
 
-@api_view(["GET"])
-def list_posts(request):
-    posts = Post.objects.all()
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
+@csrf_exempt
+def post_list(request):
+    if request.method == "GET":
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 
-@api_view(["POST"])
-def create_post(request):
-    serializer = PostSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+@csrf_exempt
+def post_detail(request, pk):
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return HttpResponse(status=404)
 
+    if request.method == "GET":
+        serializer = PostSerializer(post)
+        return JsonResponse(serializer.data)
 
-@api_view(["PATCH"])
-def update_post(request, pk):
-    post = Post.objects.get(id=pk)
-    serializer = PostSerializer(instance=post, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    elif request.method == "PUT":
+        data = JSONParser().parse(request)
+        serializer = PostSerializer(post, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
-
-@api_view(["DELETE"])
-def delete_post(request, pk):
-    post = Post.objects.get(id=pk)
-    post.delete()
-    return Response("Post deleted successfully")
+    elif request.method == "DELETE":
+        post.delete()
+        return HttpResponse(status=204)
