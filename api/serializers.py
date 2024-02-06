@@ -11,3 +11,11 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ["title", "content", "author", "categories", "created_at"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["author"] = str(instance.author)
+        representation["categories"] = [
+            str(category) for category in instance.categories.all()
+        ]
+        return representation
