@@ -32,6 +32,14 @@ def author_detail(request, pk):
         serializer = AuthorSerializer(author)
         return JsonResponse(serializer.data)
 
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = AuthorSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
     elif request.method == "PUT":
         data = JSONParser().parse(request)
         serializer = AuthorSerializer(author, data=data, partial=True)
@@ -72,6 +80,14 @@ def category_detail(request, pk):
         serializer = CategorySerializer(category)
         return JsonResponse(serializer.data)
 
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = CategorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
     elif request.method == "PUT":
         data = JSONParser().parse(request)
         serializer = CategorySerializer(category, data=data, partial=True)
@@ -111,6 +127,14 @@ def post_detail(request, pk):
     if request.method == "GET":
         serializer = PostSerializer(post)
         return JsonResponse(serializer.data)
+
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
     elif request.method == "PUT":
         data = JSONParser().parse(request)
