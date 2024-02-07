@@ -34,6 +34,14 @@ def post_detail(request, pk):
         serializer = PostSerializer(post)
         return JsonResponse(serializer.data)
 
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
     elif request.method == "PUT":
         data = JSONParser().parse(request)
         serializer = PostSerializer(post, data=data, partial=True)

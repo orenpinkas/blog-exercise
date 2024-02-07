@@ -19,3 +19,15 @@ class PostSerializer(serializers.ModelSerializer):
             str(category) for category in instance.categories.all()
         ]
         return representation
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["name"]
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ["name", "email"]
