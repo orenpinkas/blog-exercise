@@ -22,23 +22,22 @@ class PostManager(models.Manager):
     def created_between(self, posts, start, end):
         try:
             if start is None:
-                end = make_aware(parser.parse(end))
+                end = parser.parse(end)
                 return posts.filter(created_at__lte=end)
             elif end is None:
-                start = make_aware(parser.parse(start))
+                start = parser.parse(start)
                 return posts.filter(created_at__gte=start)
             else:
-                start = make_aware(parser.parse(start))
-                end = make_aware(parser.parse(end))
+                start = parser.parse(start)
+                end = parser.parse(end)
                 return posts.filter(created_at__range=(start, end))
         except (TypeError, parser._parser.ParserError):
             return posts
 
     def of_category(self, posts, category):
-        try:
-            return posts.filter(categories__name=category)
-        except Category.DoesNotExist:
+        if category is None:
             return posts
+        return posts.filter(categories__name=category)
 
     def custom_filter(self, **kwargs):
         posts = self.get_queryset()
