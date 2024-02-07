@@ -8,7 +8,9 @@ from .serializers import PostSerializer
 @csrf_exempt
 def post_list(request):
     if request.method == "GET":
-        posts = Post.objects.all()
+        params = request.GET.dict()
+        posts = Post.objects.custom_filter(**params)
+
         serializer = PostSerializer(posts, many=True)
         return JsonResponse(serializer.data, safe=False)
 

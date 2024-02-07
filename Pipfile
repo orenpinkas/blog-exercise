@@ -8,6 +8,7 @@ django = "*"
 django-seed = "*"
 psycopg2-binary = "*"
 djangorestframework = "*"
+debugpy = "*"
 requests = "*"
 
 [dev-packages]
