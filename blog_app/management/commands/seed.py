@@ -1,5 +1,5 @@
 from blog_app.models import Author, Category, Post
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandParser
 import random
 from faker import Faker
 from blog_app.utils.authors import get_authors
@@ -58,9 +58,30 @@ def generate_post_data(authors):
 class Command(BaseCommand):
     help = "Seeds the database with initial data"
 
+    def add_arguments(self, parser: CommandParser) -> None:
+        # Positional arguments
+        parser.add_argument("n_posts", type=str, help="number of posts to create")
+
+    def validate_argument(self, n_posts):
+        try:
+            n_posts = int(n_posts)
+        except ValueError:
+            raise ValueError("n_posts must be a number")
+
+        if n_posts < 1:
+            raise ValueError("n_posts must be greater than 0")
+
+        if n_posts > 10000:
+            raise ValueError("n_posts must be less than 10000")
+
     def handle(self, *args, **options):
+        n_posts = int(options["n_posts"])
+        self.validate_argument(n_posts)
+
+        print(f"Seeding database with {n_posts} posts...")
+
         seed_categories()
         seed_authors()
-        seed_posts(10000)
+        seed_posts(n_posts)
 
         self.stdout.write(self.style.SUCCESS("Successfully seeded the database!"))
