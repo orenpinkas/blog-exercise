@@ -1,10 +1,8 @@
 from blog_app.models import Author, Category, Post
 from django.core.management.base import BaseCommand
-from django_seed import Seed
 import random
 from faker import Faker
 from blog_app.utils.authors import get_authors
-import time
 
 
 def seed_categories():
