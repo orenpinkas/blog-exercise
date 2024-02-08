@@ -40,7 +40,15 @@ def seed_posts(n):
 
     categories = list(Category.objects.all())
     for post in posts:
-        post.categories.set(random.sample(categories, random.randint(1, 3)))
+        post_categories = random.sample(categories, random.randint(1, 3))
+        post.categories.set(post_categories)
+        if random.choice([True, False]):
+            post.content += " " + post_categories[0].name
+        post.did_category_name_appear_in_post = any(
+            category.name in post.content for category in post_categories
+        )
+
+    Post.objects.bulk_update(posts, ["content", "did_category_name_appear_in_post"])
 
 
 def generate_post_data(authors):
@@ -52,7 +60,12 @@ def generate_post_data(authors):
         max_nb_chars=1000
     )  # Generates random text up to 1000 characters
     author = random.choice(authors)
-    return {"title": title, "content": content, "author": author}
+    return {
+        "title": title,
+        "content": content,
+        "author": author,
+        "num_words": len(content.split()),
+    }
 
 
 class Command(BaseCommand):
