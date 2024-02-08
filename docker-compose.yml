@@ -1,6 +1,6 @@
 services:
   api:
-    image: api
+    build: .
     ports:
       - 8000:8000
     command: python manage.py runserver 0.0.0.0:8000
@@ -8,6 +8,7 @@ services:
       - db
     volumes:
       - .:/app
+    restart: always
 
   db:
     image: postgres:14
@@ -22,3 +23,5 @@ services:
 
 volumes:
   postgres-data:
+
+
