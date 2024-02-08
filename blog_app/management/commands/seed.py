@@ -75,8 +75,16 @@ class Command(BaseCommand):
             raise ValueError("n_posts must be less than 10000")
 
     def handle(self, *args, **options):
+        try:
+            self.validate_argument(options["n_posts"])
+        except ValueError as e:
+            self.stdout.write(self.style.ERROR(str(e)))
+            return
         n_posts = int(options["n_posts"])
-        self.validate_argument(n_posts)
+
+        if Post.objects.exists():
+            print("Posts already exist in the database. Aborting seeding.")
+            return
 
         print(f"Seeding database with {n_posts} posts...")
 
