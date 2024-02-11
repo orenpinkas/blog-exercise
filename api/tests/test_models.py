@@ -80,3 +80,7 @@ class PostTestCase(TestCase):
         post.categories.add(Category.objects.create(name="test"))
         post.save()
         self.assertEqual(post.did_category_name_appear_in_post, True)
+
+        post.categories.remove(Category.objects.get(name="test"))
+        post.save()
+        self.assertEqual(post.did_category_name_appear_in_post, False)

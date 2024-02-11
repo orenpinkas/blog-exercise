@@ -1,8 +1,8 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from api.PostViews import post_list, post_detail
-from api.AuthorViews import author_list, author_detail
-from api.CategoryViews import category_list, category_detail
+from api.post_views import post_list, post_detail
+from api.author_views import author_list, author_detail
+from api.category_views import category_list, category_detail
 
 
 class TestPostUrls(SimpleTestCase):
