@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
             "args": [
-                "runserver"
+                "test",
+                "api.tests.test_views.TestPostViews.test_post_detail_post"
             ],
             "django": true
         }

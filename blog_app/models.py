@@ -26,11 +26,15 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category)
     created_at = models.DateTimeField(auto_now_add=True)
     num_words = models.IntegerField(blank=True, null=True)
-    did_category_name_appear_in_post = models.BooleanField(blank=True, null=True)
+    did_category_name_appear_in_post = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         words = self.content.split()
         self.num_words = len(words)
+        if self.id:  # if the post is already saved
+            self.did_category_name_appear_in_post = any(
+                category.name in words for category in self.categories.all()
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -46,3 +50,4 @@ def categories_changed_receiver(sender, instance, action, pk_set, **kwargs):
                 instance.did_category_name_appear_in_post = True
                 instance.save(update_fields=["did_category_name_appear_in_post"])
                 break
+        instance.did_category_name_appear_in_post = False

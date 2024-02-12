@@ -37,5 +37,5 @@ authors = [
 ]
 
 
-def get_authors():
+def get_author_data():
     return authors
