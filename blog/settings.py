@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,10 +83,17 @@ DATABASES = {
         "NAME": "postgres",
         "USER": "oren",
         "PASSWORD": "1234",
-        "HOST": "db",  # set in docker-compose.yml
+        "HOST": "localhost",  # set in docker-compose.yml
         "PORT": 5432,  # set in docker-compose.yml
-    }
+    },
 }
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+        }
+    }
 
 
 # Password validation

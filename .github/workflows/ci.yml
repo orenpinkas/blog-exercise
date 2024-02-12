@@ -10,16 +10,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:14
-        env:
-          POSTGRES_DB: postgres
-          POSTGRES_USER: oren
-          POSTGRES_PASSWORD: 1234
-        ports:
-          - 5432:5432
-      
 
     steps:
     - uses: actions/checkout@v3
@@ -33,10 +23,6 @@ jobs:
         pip install pipenv
         pipenv requirements > requirements.txt
         pip install -r requirements.txt
-    - name: Run Migrations
-      run: |
-        python manage.py makemigrations
-        python manage.py migrate
     - name: Run Tests
       run: |
         python manage.py test
