@@ -4,10 +4,16 @@ services:
     ports:
       - 8000:8000
     command: bash ./entrypoint.sh
+    environment:
+      - DEBUG=True
+      - DB_USER=oren
+      - DB_PASSWORD=1234
+      - DB_HOST=db
+      - DJANGO_SETTINGS=blog.settings
     depends_on:
       - db
     volumes:
-      - .:/app
+      - .:/usr/src/app
     restart: always
 
   db:
@@ -15,7 +21,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_DB: blogdb
+      POSTGRES_DB: postgres
       POSTGRES_USER: oren
       POSTGRES_PASSWORD: 1234
     ports:
